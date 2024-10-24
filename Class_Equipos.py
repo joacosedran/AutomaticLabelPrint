@@ -1,16 +1,24 @@
+# class_equipos.py
+
 class Equipos:
-    def __init__(self, ID, TIPO, MODELO, OS, MARCA, USUARIOS, ANTIGUEDAD, GAMA, DISCO, CtoAdq_USD, ESTADO):
-        self.ID = ID
-        self.TIPO = TIPO
-        self.MODELO = MODELO
-        self.OS = OS
-        self.MARCA = MARCA
-        self.USUARIOS = USUARIOS
-        self.ANTIGUEDAD = ANTIGUEDAD
-        self.GAMA = GAMA
-        self.DISCO = DISCO
-        self.CtoAdq_USD = CtoAdq_USD
-        self.ESTADO = ESTADO
+    """
+    Represents an equipment item with various specifications.
+    """
+    def __init__(self, equip_id, tipo, os, marca, usuarios, antiguedad, gama, disco, cto_adq_usd, estado, modelo):
+        self.equip_id = equip_id
+        self.tipo = tipo
+        self.os = os
+        self.marca = marca
+        self.usuarios = usuarios
+        self.antiguedad = antiguedad
+        self.gama = gama
+        self.disco = disco
+        self.cto_adq_usd = cto_adq_usd
+        self.estado = estado
+        self.modelo = modelo
 
     def __repr__(self):
-        return f"Equipos(ID = {self.ID}, TIPO = {self.TIPO}, OS = {self.MARCA}, USUARIOS = {self.USUARIOS}, ANTIGUEDAD = {self.ANTIGUEDAD}, GAMA = {self.USUARIOS}, DISCO = {self.DISCO}, Cto_Adq_USD = {self.CtoAdq_USD}, ESTADO = {self.ESTADO}, MODELO = {self.MODELO})"
+        return (f"ID: {self.equip_id}, Tipo: {self.tipo}, OS: {self.os}, Marca: {self.marca}, "
+                f"Usuarios: {self.usuarios}, Antigüedad: {self.antiguedad}, Gama: {self.gama}, "
+                f"Disco: {self.disco}, Cto Adq (USD): {self.cto_adq_usd}, Estado: {self.estado}, "
+                f"Modelo: {self.modelo}")
