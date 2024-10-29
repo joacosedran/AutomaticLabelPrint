@@ -2,6 +2,7 @@ import time
 import typer
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from InquirerPy import inquirer
+from rich import print
 
 def imprimir():
     with Progress(
@@ -51,7 +52,7 @@ def menuOpciones():
     if opcion_seleccionada == "imprimirEtiqueta":
         imprimirEtiqueta()
     if opcion_seleccionada == "salir":
-        print("Gracias por usar el programa. ¡Hasta luego!")
+        print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
         raise typer.Exit()
 
 def main():
