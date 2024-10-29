@@ -1,0 +1,73 @@
+Se propone hacer los diferentes departamentos en clases diferentes, esto supondra un cambio utilizando una clase "Equipos" como heredera de sus atributos para que
+reutilizar codigo, como ejemplo:
+
+def cargar_datos(self, ruta_inge, sheet_inge):
+        df = pd.read_excel(ruta_inge, sheet_name=sheet_inge)
+        equipos = []
+        
+        # Mostrar los datos del DataFrame para depuración
+        print("Datos cargados desde el Excel:")
+        print(df)
+
+        for _, row in df.iterrows():
+            equipo = Equipos(row['ID'], row['TIPO'], row['OS'], row['MARCA'], 
+                            row['USUARIOS'], row['ANTIGUEDAD'], row['GAMA'], 
+                            row['DISCO'], row['CtoAdq_USD'], row['ESTADO'], 
+                            row['MODELO'])
+            equipos.append(equipo)
+        
+        return equipos
+
+class Equipos:
+    def __init__(self, equip_id, tipo, os, marca, usuarios, antiguedad, gama, disco, cto_adq_usd, estado, modelo):
+        self.equip_id = equip_id
+        self.tipo = tipo
+        self.os = os
+        self.marca = marca
+        self.usuarios = usuarios
+        self.antiguedad = antiguedad
+        self.gama = gama
+        self.disco = disco
+        self.cto_adq_usd = cto_adq_usd
+        self.estado = estado
+        self.modelo = modelo
+
+    def __repr__(self):
+        return (f"ID: {self.equip_id}, Tipo: {self.tipo}, OS: {self.os}, Marca: {self.marca}, "
+                f"Usuarios: {self.usuarios}, Antigüedad: {self.antiguedad}, Gama: {self.gama}, "
+                f"Disco: {self.disco}, Cto Adq (USD): {self.cto_adq_usd}, Estado: {self.estado}, "
+                f"Modelo: {self.modelo}")
+    
+    def ruta():
+        return
+    
+class Ingenieria(Equipos):
+    def ruta:
+        RUTA_INGE = "EquiposCremona.xlsx"  # Replace with the actual path
+        SHEET_INGE = "Ingenieria"          # Replace with your actual sheet name
+
+        gestor = GestorEquipos(RUTA_INGE, SHEET_INGE)# Create an instance
+        
+        return gestor
+
+class Produccion(Equipos):
+    def ruta:
+        RUTA_INGE = "EquiposCremona.xlsx"  # Replace with the actual path
+        SHEET_INGE = "Produccion"          # Replace with your actual sheet name
+
+        gestor = GestorEquipos(RUTA_INGE, SHEET_INGE)# Create an instance
+        
+        return gestor
+
+clas Administracion(Equipos):
+    def ruta:
+        RUTA_INGE = "EquiposCremona.xlsx"  # Replace with the actual path
+        SHEET_INGE = "Administracion"      # Replace with your actual sheet name
+
+        gestor = GestorEquipos(RUTA_INGE, SHEET_INGE)# Create an instance
+        
+        return gestor
+
+en cada una de estas clases se cargaran los datos de sus respectivos dispositivos
+
+tambien se propone eliminar la clase "GestorEquipos" y que sus metodos sean simplemente funciones.

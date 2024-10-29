@@ -1,9 +1,4 @@
-# class_equipos.py
-
 class Equipos:
-    """
-    Represents an equipment item with various specifications.
-    """
     def __init__(self, equip_id, tipo, os, marca, usuarios, antiguedad, gama, disco, cto_adq_usd, estado, modelo):
         self.equip_id = equip_id
         self.tipo = tipo

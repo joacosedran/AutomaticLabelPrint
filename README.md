@@ -19,4 +19,13 @@ Este proyecto, desarrollado en Python, automatiza la impresión de etiquetas par
 Instala las dependencias con el siguiente comando:
 
 ```bash
-pip install typer InquirerPy time
+pip install typer InquirerPy
+
+```bash
+pip install pandas
+
+```bash
+pip install openpyxl
+
+```bash
+pip install pillow
