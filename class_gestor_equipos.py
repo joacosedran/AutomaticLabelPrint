@@ -4,12 +4,6 @@ import pandas as pd
 from class_equipos import Equipos
 
 class GestorEquipos:
-    """
-    Manages a collection of equipment items loaded from an Excel file.
-
-    This class provides methods to load equipment data, display details 
-    of individual equipment items, and print the information of all equipment.
-    """
 
     def __init__(self, ruta_inge, sheet_inge):
         """Initialize the GestorEquipos with the path to the Excel file and sheet name."""

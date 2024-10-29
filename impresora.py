@@ -1,9 +1,7 @@
 import win32print
 import win32ui
 
-# Nombre de la impresora que configuraste en el sistema operativo
 printer_name = "Departamento De Sistemas" 
-
 # Crear un contexto de impresión
 hprinter = win32print.OpenPrinter(printer_name)
 
