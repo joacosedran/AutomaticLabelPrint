@@ -20,12 +20,16 @@ Instala las dependencias con el siguiente comando:
 
 ```bash
 pip install typer InquirerPy
-
+```
 ```bash
 pip install pandas
-
+```
 ```bash
 pip install openpyxl
-
+```
 ```bash
 pip install pillow
+```
+```bash
+pip install tabulate
+```

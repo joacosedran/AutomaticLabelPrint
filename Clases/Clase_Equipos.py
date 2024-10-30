@@ -1,4 +1,5 @@
 class Equipos:
+    RUTA = "Excel/Equipos.xlsx"
     def __init__(self, equip_id, tipo, os, marca, usuarios, antiguedad, gama, disco, cto_adq_usd, estado, modelo):
         self.equip_id = equip_id
         self.tipo = tipo
