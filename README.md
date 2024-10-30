@@ -16,7 +16,7 @@ Este proyecto, desarrollado en Python, automatiza la impresión de etiquetas par
   - `openpyxl`: Para leer y escribir archivos en formato Excel.
   - `win32print` y `win32api`: Para gestionar la impresora en sistemas Windows.
 
-Instala las dependencias con el siguiente comando:
+Instala las dependencias con los siguientes comandos:
 
 ```bash
 pip install typer InquirerPy
