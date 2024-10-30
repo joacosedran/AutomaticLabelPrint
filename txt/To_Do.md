@@ -74,3 +74,8 @@ from Clases.Clase_Equipos import Equipos
 Solucion que no me gusta, pero funciona, ya se vera como mejorarlo y optimizarlo.
 
 Asegurate de que cada carpeta (proyecto, clases, funciones) contenga un archivo __init__.py (aunque este vacio). Esto le indica a Python que trate a cada carpeta como un paquete.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Se creo por fin un entorno virtual donde se podran descargar todos los requerimientos sin que estos se descarguen globalmente, no se muy bien si se agrega al git o si hay que hacerlo cada que se vuelve a abrir el visual studio code.
+

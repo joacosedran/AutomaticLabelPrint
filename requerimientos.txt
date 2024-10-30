@@ -1,0 +1,6 @@
+pandas
+typer
+tabulate
+rich
+InquirerPy
+tkinter
