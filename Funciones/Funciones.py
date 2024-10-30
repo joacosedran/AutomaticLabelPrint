@@ -3,12 +3,10 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 
-import time
 import pandas as pd
 import typer
 
 from tabulate import tabulate
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from InquirerPy import inquirer
 from rich import print
 
