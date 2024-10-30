@@ -72,3 +72,5 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 from Clases.Clase_Equipos import Equipos
 ```
 Solucion que no me gusta, pero funciona, ya se vera como mejorarlo y optimizarlo.
+
+Asegurate de que cada carpeta (proyecto, clases, funciones) contenga un archivo __init__.py (aunque este vacio). Esto le indica a Python que trate a cada carpeta como un paquete.
