@@ -65,7 +65,6 @@ def seleccionar_departamento_para_un_equipo():
     equipos_vector = cargar_datos(departamento_seleccionado)
     imprimir_un_equipo(equipos_vector)
 
-
 def imprimir_todas_las_etiquetas():
     equipos_ingenieria = cargar_datos(Ingenieria)
     equipos_produccion = cargar_datos(Produccion)
@@ -117,7 +116,6 @@ def imprimir_un_equipo(equipos_vector):
         else:
             print("ID no encontrada, ingrese nuevamente:")
     volver_menu()
-
 
 def volver_menu():
     opcion_seleccionada = inquirer.select(
