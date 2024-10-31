@@ -22,6 +22,9 @@ from Clases.Clase_Sistemas import Sistemas
 from Clases.Clase_Tesoreria import Tesoreria
 from Clases.Clase_Ventas import Ventas
 
+#---------------------------------------------------------------------DATOS---------------------------------------------------------------------#
+
+
 def cargar_datos(clase_equipo):
     df = pd.read_excel(clase_equipo.RUTA, sheet_name=clase_equipo.HOJA)
     equipos = []
@@ -36,6 +39,9 @@ def cargar_datos(clase_equipo):
         equipos.append(equipo)
         
     return equipos
+
+
+#---------------------------------------------------------------------MENU---------------------------------------------------------------------#
 
 def menu_opciones():
     opciones = [
@@ -61,6 +67,19 @@ def menu_opciones():
     elif opcion_seleccionada == "salir":
         print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
         raise typer.Exit()
+
+
+def volver_menu():
+    opcion_seleccionada = inquirer.select(
+        message="¿Quieres regresar al menú principal?",
+        choices=["Y", "N"]
+    ).execute()
+    if opcion_seleccionada == "Y":
+        menu_opciones()
+    else:
+        print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
+
+#---------------------------------------------------------------------SELECCION---------------------------------------------------------------------#
 
 def seleccionar_departamento_para_ultimo_registro():
     opciones = [
@@ -88,18 +107,6 @@ def seleccionar_departamento_para_ultimo_registro():
     else:
         print("No hay equipos en el departamento seleccionado.")
 
-def imprimir_todas_las_etiquetas():
-    equipos_administracion = cargar_datos(Administracion)
-    equipos_electronica = cargar_datos(Electronica)
-    equipos_gerencia = cargar_datos(Gerencia)
-    equipos_ingenieria = cargar_datos(Ingenieria)
-    equipos_panol = cargar_datos(Panol)
-    equipos_produccion = cargar_datos(Produccion)
-    equipos_sistemas = cargar_datos(Sistemas)
-    equipos_tesoreria = cargar_datos(Tesoreria)
-    equipos_ventas = cargar_datos(Ventas)
-    equipos_vector = equipos_administracion + equipos_electronica + equipos_gerencia + equipos_ingenieria + equipos_panol + equipos_produccion + equipos_sistemas + equipos_tesoreria + equipos_ventas
-    imprimir_todos_los_equipos(equipos_vector)
 
 def seleccionar_departamento():
     opciones = [
@@ -121,6 +128,7 @@ def seleccionar_departamento():
     equipos_vector = cargar_datos(departamento_seleccionado)
     seleccionar_tipo_de_equipo(equipos_vector)
 
+
 def seleccionar_tipo_de_equipo(equipos_vector):
     tipos_dispositivos = set(e.tipo for e in equipos_vector)
     opciones = [{"name": tipo, "value": tipo} for tipo in tipos_dispositivos]
@@ -132,6 +140,7 @@ def seleccionar_tipo_de_equipo(equipos_vector):
     ).execute()
     equipos_filtrados = [e for e in equipos_vector if e.tipo == tipo_seleccionado]
     imprimir_todos_los_equipos(equipos_filtrados)
+
 
 def seleccionar_departamento_para_un_equipo():
     opciones = [
@@ -151,7 +160,25 @@ def seleccionar_departamento_para_un_equipo():
         pointer="♦️ ",
     ).execute()
     equipos_vector = cargar_datos(departamento_seleccionado)
-    imprimir_un_equipo(equipos_vector)
+    if departamento_seleccionado == Administracion:
+        departamento = "Administración"
+    imprimir_un_equipo(equipos_vector, departamento_seleccionado)
+
+#---------------------------------------------------------------------IMPRESION---------------------------------------------------------------------#
+
+def imprimir_todas_las_etiquetas():
+    equipos_administracion = cargar_datos(Administracion)
+    equipos_electronica = cargar_datos(Electronica)
+    equipos_gerencia = cargar_datos(Gerencia)
+    equipos_ingenieria = cargar_datos(Ingenieria)
+    equipos_panol = cargar_datos(Panol)
+    equipos_produccion = cargar_datos(Produccion)
+    equipos_sistemas = cargar_datos(Sistemas)
+    equipos_tesoreria = cargar_datos(Tesoreria)
+    equipos_ventas = cargar_datos(Ventas)
+    equipos_vector = equipos_administracion + equipos_electronica + equipos_gerencia + equipos_ingenieria + equipos_panol + equipos_produccion + equipos_sistemas + equipos_tesoreria + equipos_ventas
+    imprimir_todos_los_equipos(equipos_vector)
+
 
 def imprimir_todos_los_equipos(equipos_vector):
     if not equipos_vector:
@@ -159,41 +186,30 @@ def imprimir_todos_los_equipos(equipos_vector):
     else:
         # Convertir la lista de objetos a una lista de listas para tabulate
         equipos_tabla = [[e.equip_id, e.tipo, e.modelo, e.os, e.marca, e.usuarios, e.antiguedad, e.gama, e.disco, e.cto_adq_usd, e.estado] for e in equipos_vector]
-        headers = ["ID", "Tipo", "Modelo", "SO", "Marca", "Usuarios", "Antiguedad", "Gama", "Disco", "Costo (U$D)", "Estado"]
-        tabla = tabulate(equipos_tabla, headers=headers, tablefmt="fancy_grid")
-        print(tabla)
+        imprimir_etiqueta(equipos_tabla)
     volver_menu()
 
-def imprimir_un_equipo(equipos_vector):
-    print("IDs disponibles:", [e.equip_id for e in equipos_vector])
+
+def imprimir_un_equipo(equipos_vector, departamento):
+    print("IDs disponibles:", [e.equip_id 
+                               for e in equipos_vector])
     while True:
         equip_id = input("Ingrese el ID del equipo a imprimir: ")
         equipo_encontrado = next((e for e in equipos_vector if str(e.equip_id) == str(equip_id)), None)
         if equipo_encontrado:
-            equipo_tabla = [[
+            equipos_tabla = [
                 equipo_encontrado.equip_id, equipo_encontrado.tipo, equipo_encontrado.os, 
                 equipo_encontrado.marca, equipo_encontrado.usuarios, equipo_encontrado.antiguedad, 
                 equipo_encontrado.gama, equipo_encontrado.disco, equipo_encontrado.cto_adq_usd, 
                 equipo_encontrado.estado, equipo_encontrado.modelo
-            ]]
-            imprimir_etiqueta(equipo_tabla)
-            # headers = ["ID", "Tipo", "Modelo", "SO", "Marca", "Usuarios", "Antiguedad", "Gama", "Disco", "Costo (U$D)", "Estado"]
-            # tabla = tabulate(equipo_tabla, headers=headers, tablefmt="fancy_grid")
-            # print(tabla)
+            ]
+            imprimir_etiqueta(equipos_tabla, departamento)
             break
         else:
             print("ID no encontrada, ingrese nuevamente:")
-    volver_menu()
+    menu_opciones()
 
-def volver_menu():
-    opcion_seleccionada = inquirer.select(
-        message="¿Quieres regresar al menú principal?",
-        choices=["Y", "N"]
-    ).execute()
-    if opcion_seleccionada == "Y":
-        menu_opciones()
-    else:
-        print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
+#---------------------------------------------------------------------EJECUCION---------------------------------------------------------------------#
 
 def main():
     menu_opciones()
