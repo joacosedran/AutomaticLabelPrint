@@ -79,3 +79,6 @@ Asegurate de que cada carpeta (proyecto, clases, funciones) contenga un archivo 
 
 Se creo por fin un entorno virtual donde se podran descargar todos los requerimientos sin que estos se descarguen globalmente, no se muy bien si se agrega al git o si hay que hacerlo cada que se vuelve a abrir el visual studio code.
 
+------------------------------------------------------------------------------------------------------------------------------
+
+Se requiere imprimir en la etiqueta la ubicacion del equipo, una opcion es agregar al objeto un atributo llamado "ubicacion", el cual cargaremos desde el constructor.

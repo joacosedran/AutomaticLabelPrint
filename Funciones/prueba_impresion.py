@@ -6,7 +6,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 import pandas as pd
 import typer
 
-from tabulate import tabulate
 from InquirerPy import inquirer
 from rich import print
 
@@ -25,20 +24,23 @@ from Clases.Clase_Ventas import Ventas
 #---------------------------------------------------------------------DATOS---------------------------------------------------------------------#
 
 
-def cargar_datos(clase_equipo):
+def cargar_datos(clase_equipo, departamento):
     df = pd.read_excel(clase_equipo.RUTA, sheet_name=clase_equipo.HOJA)
     equipos = []
     
     print(f"Datos cargados desde el Excel: {clase_equipo.RUTA} - {clase_equipo.HOJA}")    
     for _, row in df.iterrows():
+        # Crear el equipo sin pasar `departamento` al constructor
         equipo = clase_equipo(row['ID'], row['Tipo'], row['Modelo'], row['SO'],
                               row['Marca'], row['Usuarios'], row['Antiguedad'],
-                              row['Gama'], row['Disco'], row['Costo (U$D)'],
-                              row['Estado'],
+                              row['Gama'], row['Disco'], row['Estado']
                               )
+        equipo.departamento = departamento
         equipos.append(equipo)
         
     return equipos
+
+
 
 
 #---------------------------------------------------------------------MENU---------------------------------------------------------------------#
@@ -125,8 +127,12 @@ def seleccionar_departamento():
         choices=opciones,
         pointer="♦️ ",
     ).execute()
-    equipos_vector = cargar_datos(departamento_seleccionado)
+
+    nombre_departamento = [opcion["name"] for opcion in opciones if opcion["value"] == departamento_seleccionado][0]
+
+    equipos_vector = cargar_datos(departamento_seleccionado, nombre_departamento)
     seleccionar_tipo_de_equipo(equipos_vector)
+
 
 
 def seleccionar_tipo_de_equipo(equipos_vector):
@@ -160,24 +166,22 @@ def seleccionar_departamento_para_un_equipo():
         pointer="♦️ ",
     ).execute()
     equipos_vector = cargar_datos(departamento_seleccionado)
-    if departamento_seleccionado == Administracion:
-        departamento = "Administración"
     imprimir_un_equipo(equipos_vector, departamento_seleccionado)
 
 #---------------------------------------------------------------------IMPRESION---------------------------------------------------------------------#
 
 def imprimir_todas_las_etiquetas():
-    equipos_administracion = cargar_datos(Administracion)
-    equipos_electronica = cargar_datos(Electronica)
-    equipos_gerencia = cargar_datos(Gerencia)
-    equipos_ingenieria = cargar_datos(Ingenieria)
-    equipos_panol = cargar_datos(Panol)
-    equipos_produccion = cargar_datos(Produccion)
-    equipos_sistemas = cargar_datos(Sistemas)
-    equipos_tesoreria = cargar_datos(Tesoreria)
-    equipos_ventas = cargar_datos(Ventas)
+    equipos_administracion = cargar_datos(Administracion, "Administracion")
+    equipos_electronica = cargar_datos(Electronica, "Electronica")
+    equipos_gerencia = cargar_datos(Gerencia, "Gerencia")
+    equipos_ingenieria = cargar_datos(Ingenieria, "Ingenieria")
+    equipos_panol = cargar_datos(Panol, "Panol")
+    equipos_produccion = cargar_datos(Produccion, "Produccion")
+    equipos_sistemas = cargar_datos(Sistemas, "Sistemas")
+    equipos_tesoreria = cargar_datos(Tesoreria, "Tesoreria")
+    equipos_ventas = cargar_datos(Ventas, "Ventas")
     equipos_vector = equipos_administracion + equipos_electronica + equipos_gerencia + equipos_ingenieria + equipos_panol + equipos_produccion + equipos_sistemas + equipos_tesoreria + equipos_ventas
-    imprimir_todos_los_equipos(equipos_vector)
+    imprimir_etiqueta(equipos_vector)
 
 
 def imprimir_todos_los_equipos(equipos_vector):
@@ -185,12 +189,12 @@ def imprimir_todos_los_equipos(equipos_vector):
         print("No hay equipos para mostrar.")
     else:
         # Convertir la lista de objetos a una lista de listas para tabulate
-        equipos_tabla = [[e.equip_id, e.tipo, e.modelo, e.os, e.marca, e.usuarios, e.antiguedad, e.gama, e.disco, e.cto_adq_usd, e.estado] for e in equipos_vector]
+        equipos_tabla = [[e.equip_id, e.tipo, e.modelo, e.os, e.marca, e.usuarios, e.antiguedad, e.gama, e.disco, e.estado, e.ubicacion] for e in equipos_vector]
         imprimir_etiqueta(equipos_tabla)
     volver_menu()
 
 
-def imprimir_un_equipo(equipos_vector, departamento):
+def imprimir_un_equipo(equipos_vector):
     print("IDs disponibles:", [e.equip_id 
                                for e in equipos_vector])
     while True:
@@ -200,10 +204,10 @@ def imprimir_un_equipo(equipos_vector, departamento):
             equipos_tabla = [
                 equipo_encontrado.equip_id, equipo_encontrado.tipo, equipo_encontrado.os, 
                 equipo_encontrado.marca, equipo_encontrado.usuarios, equipo_encontrado.antiguedad, 
-                equipo_encontrado.gama, equipo_encontrado.disco, equipo_encontrado.cto_adq_usd, 
-                equipo_encontrado.estado, equipo_encontrado.modelo
+                equipo_encontrado.gama, equipo_encontrado.disco, equipo_encontrado.estado,
+                equipo_encontrado.modelo, equipo_encontrado.ubicacion
             ]
-            imprimir_etiqueta(equipos_tabla, departamento)
+            imprimir_etiqueta(equipos_tabla)
             break
         else:
             print("ID no encontrada, ingrese nuevamente:")
