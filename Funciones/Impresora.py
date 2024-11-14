@@ -21,9 +21,7 @@ def imprimir_etiqueta(equipos_vector):
         hdc.SetWindowExt((ancho_mm, alto_mm))
 
         hdc.StartDoc("Etiquetas de Equipos")
-        
-        # Define la posición inicial de la primera etiqueta
-        
+                
         font_name = "Arial"
         font_size = 45
         font_weight = win32con.FW_BOLD
@@ -34,10 +32,14 @@ def imprimir_etiqueta(equipos_vector):
         })
         hdc.SelectObject(hfont)
 
-        # Imprimir cada equipo en equipos_vector
         for equipo in equipos_vector:
             hdc.StartPage()
             
+            print(f"ID: {equipo.tipo} - {equipo.ubicacion} - {equipo.equip_id}")
+            print(f"Usuarios: {equipo.usuarios}")
+            print(f"Estado: {equipo.estado}")
+            
+            """
             y_offset = -50
             hdc.TextOut(25, y_offset, f"ID: {equipo.tipo} - {equipo.departamento} - {equipo.equip_id}")
             y_offset -= 50
@@ -73,8 +75,8 @@ def imprimir_etiqueta(equipos_vector):
             dib.draw(hdc.GetHandleOutput(), (x, y, x + nuevo_ancho, y + nuevo_alto))
             
             hdc.EndPage()  # Finaliza la página para el equipo actual
-            
-        hdc.EndDoc()  # Termina el documento después de imprimir todos los equipos
+            """
+        hdc.EndDoc()
 
     finally:
         win32print.ClosePrinter(hprinter)

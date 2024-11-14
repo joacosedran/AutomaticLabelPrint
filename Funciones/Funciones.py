@@ -6,7 +6,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 import pandas as pd
 import typer
 
-from tabulate import tabulate
 from InquirerPy import inquirer
 from rich import print
 
@@ -22,20 +21,50 @@ from Clases.Clase_Sistemas import Sistemas
 from Clases.Clase_Tesoreria import Tesoreria
 from Clases.Clase_Ventas import Ventas
 
+#---------------------------------------------------------------------GENERICAS---------------------------------------------------------------------#
+
 def cargar_datos(clase_equipo):
     df = pd.read_excel(clase_equipo.RUTA, sheet_name=clase_equipo.HOJA)
     equipos = []
-    
     print(f"Datos cargados desde el Excel: {clase_equipo.RUTA} - {clase_equipo.HOJA}")    
     for _, row in df.iterrows():
-        equipo = clase_equipo(row['ID'], row['Tipo'], row['Modelo'], row['SO'],
-                              row['Marca'], row['Usuarios'], row['Antiguedad'],
-                              row['Gama'], row['Disco'], row['Costo (U$D)'],
+        equipo = clase_equipo(row['ID'],
+                              row['Tipo'],
+                              row['SO'],
+                              row['Marca'],
+                              row['Usuarios'],
+                              row['Antiguedad'],
+                              row['Gama'],
+                              row['Disco'],
                               row['Estado'],
+                              row['Modelo']
                               )
-        equipos.append(equipo)
-        
+        equipos.append(equipo)    
     return equipos
+
+def obtener_opciones_departamento():
+    return [
+        {"name": "Administración", "value": Administracion},
+        {"name": "Electrónica", "value": Electronica},
+        {"name": "Gerencia", "value": Gerencia},
+        {"name": "Ingeniería", "value": Ingenieria},
+        {"name": "Pañol", "value": Panol},
+        {"name": "Producción", "value": Produccion},
+        {"name": "Sistemas", "value": Sistemas},
+        {"name": "Tesorería", "value": Tesoreria},
+        {"name": "Ventas", "value": Ventas}
+    ]
+
+def seleccionar_departamento(message="Selecciona un departamento:"):
+    opciones = obtener_opciones_departamento()
+    departamento_seleccionado = inquirer.select(
+        message=message,
+        choices=opciones,
+        pointer="♦️ ",
+    ).execute()
+    return departamento_seleccionado
+
+#---------------------------------------------------------------------MENU---------------------------------------------------------------------#
 
 def menu_opciones():
     opciones = [
@@ -53,7 +82,7 @@ def menu_opciones():
     if opcion_seleccionada == "todas":
         imprimir_todas_las_etiquetas()
     elif opcion_seleccionada == "seleccionarDepartamento":
-        seleccionar_departamento()
+        seleccionar_departamento_para_imprimir()
     elif opcion_seleccionada == "imprimirEtiqueta":
         seleccionar_departamento_para_un_equipo()
     elif opcion_seleccionada == "ultimoRegistro":
@@ -62,66 +91,27 @@ def menu_opciones():
         print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
         raise typer.Exit()
 
+#---------------------------------------------------------------------SELECCION---------------------------------------------------------------------#
+
 def seleccionar_departamento_para_ultimo_registro():
-    opciones = [
-        {"name": "Administración", "value": Administracion},
-        {"name": "Electrónica", "value": Electronica},
-        {"name": "Gerencia", "value": Gerencia},
-        {"name": "Ingeniería", "value": Ingenieria},
-        {"name": "Pañol", "value": Panol},
-        {"name": "Producción", "value": Produccion},
-        {"name": "Sistemas", "value": Sistemas},
-        {"name": "Tesorería", "value": Tesoreria},
-        {"name": "Ventas", "value": Ventas}
-    ]
-    departamento_seleccionado = inquirer.select(
-        message="Selecciona un departamento:",
-        choices=opciones,
-        pointer="♦️ ",
-    ).execute()
+    departamento_seleccionado = seleccionar_departamento("Selecciona un departamento para el último registro:")
     equipos_vector = cargar_datos(departamento_seleccionado)
     
-    # Encuentra el equipo con el mayor ID
     if equipos_vector:
         ultimo_equipo = max(equipos_vector, key=lambda e: e.equip_id)
-        print([ultimo_equipo])
+        imprimir_equipos(ultimo_equipo)
     else:
         print("No hay equipos en el departamento seleccionado.")
+    menu_opciones()
 
-def imprimir_todas_las_etiquetas():
-    equipos_administracion = cargar_datos(Administracion)
-    equipos_electronica = cargar_datos(Electronica)
-    equipos_gerencia = cargar_datos(Gerencia)
-    equipos_ingenieria = cargar_datos(Ingenieria)
-    equipos_panol = cargar_datos(Panol)
-    equipos_produccion = cargar_datos(Produccion)
-    equipos_sistemas = cargar_datos(Sistemas)
-    equipos_tesoreria = cargar_datos(Tesoreria)
-    equipos_ventas = cargar_datos(Ventas)
-    equipos_vector = equipos_administracion + equipos_electronica + equipos_gerencia + equipos_ingenieria + equipos_panol + equipos_produccion + equipos_sistemas + equipos_tesoreria + equipos_ventas
-    imprimir_todos_los_equipos(equipos_vector)
-
-def seleccionar_departamento():
-    opciones = [
-        {"name": "Administración", "value": Administracion},
-        {"name": "Electrónica", "value": Electronica},
-        {"name": "Gerencia", "value": Gerencia},
-        {"name": "Ingeniería", "value": Ingenieria},
-        {"name": "Pañol", "value": Panol},
-        {"name": "Producción", "value": Produccion},
-        {"name": "Sistemas", "value": Sistemas},
-        {"name": "Tesorería", "value": Tesoreria},
-        {"name": "Ventas", "value": Ventas}
-    ]
-    departamento_seleccionado = inquirer.select(
-        message="Selecciona un departamento:",
-        choices=opciones,
-        pointer="♦️ ",
-    ).execute()
+def seleccionar_departamento_para_imprimir():
+    departamento_seleccionado = seleccionar_departamento("Selecciona un departamento:")
     equipos_vector = cargar_datos(departamento_seleccionado)
-    seleccionar_tipo_de_equipo(equipos_vector)
 
-def seleccionar_tipo_de_equipo(equipos_vector):
+    if not equipos_vector:
+        print("No se encontraron equipos en este departamento.")
+        return
+    
     tipos_dispositivos = set(e.tipo for e in equipos_vector)
     opciones = [{"name": tipo, "value": tipo} for tipo in tipos_dispositivos]
     
@@ -130,39 +120,32 @@ def seleccionar_tipo_de_equipo(equipos_vector):
         choices=opciones,
         pointer="♦️ ",
     ).execute()
+
     equipos_filtrados = [e for e in equipos_vector if e.tipo == tipo_seleccionado]
-    imprimir_todos_los_equipos(equipos_filtrados)
+    
+    if equipos_filtrados:
+        imprimir_equipos(equipos_filtrados)
+    else:
+        print(f"No hay equipos de tipo '{tipo_seleccionado}' en este departamento.")
+
 
 def seleccionar_departamento_para_un_equipo():
-    opciones = [
-        {"name": "Administración", "value": Administracion},
-        {"name": "Electrónica", "value": Electronica},
-        {"name": "Gerencia", "value": Gerencia},
-        {"name": "Ingeniería", "value": Ingenieria},
-        {"name": "Pañol", "value": Panol},
-        {"name": "Producción", "value": Produccion},
-        {"name": "Sistemas", "value": Sistemas},
-        {"name": "Tesorería", "value": Tesoreria},
-        {"name": "Ventas", "value": Ventas}
-    ]
-    departamento_seleccionado = inquirer.select(
-        message="Selecciona un departamento:",
-        choices=opciones,
-        pointer="♦️ ",
-    ).execute()
+    departamento_seleccionado = seleccionar_departamento("Selecciona un departamento:")
     equipos_vector = cargar_datos(departamento_seleccionado)
+    if any(isinstance(e, list) for e in equipos_vector):
+        print("¡Error! Se ha creado una lista de listas al filtrar equipos.")
+        print("Equipos filtrados:", equipos_vector)
+        return
     imprimir_un_equipo(equipos_vector)
 
-def imprimir_todos_los_equipos(equipos_vector):
-    if not equipos_vector:
-        print("No hay equipos para mostrar.")
-    else:
-        # Convertir la lista de objetos a una lista de listas para tabulate
-        equipos_tabla = [[e.equip_id, e.tipo, e.modelo, e.os, e.marca, e.usuarios, e.antiguedad, e.gama, e.disco, e.cto_adq_usd, e.estado] for e in equipos_vector]
-        headers = ["ID", "Tipo", "Modelo", "SO", "Marca", "Usuarios", "Antiguedad", "Gama", "Disco", "Costo (U$D)", "Estado"]
-        tabla = tabulate(equipos_tabla, headers=headers, tablefmt="fancy_grid")
-        print(tabla)
-    volver_menu()
+#---------------------------------------------------------------------IMPRESION---------------------------------------------------------------------#
+
+def imprimir_todas_las_etiquetas():
+    equipos_vector = []
+    for departamento in obtener_opciones_departamento():
+        equipos_vector += cargar_datos(departamento["value"])
+    imprimir_etiqueta(equipos_vector)
+    menu_opciones()
 
 def imprimir_un_equipo(equipos_vector):
     print("IDs disponibles:", [e.equip_id for e in equipos_vector])
@@ -170,33 +153,23 @@ def imprimir_un_equipo(equipos_vector):
         equip_id = input("Ingrese el ID del equipo a imprimir: ")
         equipo_encontrado = next((e for e in equipos_vector if str(e.equip_id) == str(equip_id)), None)
         if equipo_encontrado:
-            equipo_tabla = [[
-                equipo_encontrado.equip_id, equipo_encontrado.tipo, equipo_encontrado.os, 
-                equipo_encontrado.marca, equipo_encontrado.usuarios, equipo_encontrado.antiguedad, 
-                equipo_encontrado.gama, equipo_encontrado.disco, equipo_encontrado.cto_adq_usd, 
-                equipo_encontrado.estado, equipo_encontrado.modelo
-            ]]
-            imprimir_etiqueta(equipo_tabla)
-            # headers = ["ID", "Tipo", "Modelo", "SO", "Marca", "Usuarios", "Antiguedad", "Gama", "Disco", "Costo (U$D)", "Estado"]
-            # tabla = tabulate(equipo_tabla, headers=headers, tablefmt="fancy_grid")
-            # print(tabla)
+            imprimir_etiqueta([equipo_encontrado])
             break
         else:
-            print("ID no encontrada, ingrese nuevamente:")
-    volver_menu()
+            print("ID no encontrada, ingrese nuevamente:") 
+    menu_opciones()
 
-def volver_menu():
-    opcion_seleccionada = inquirer.select(
-        message="¿Quieres regresar al menú principal?",
-        choices=["Y", "N"]
-    ).execute()
-    if opcion_seleccionada == "Y":
-        menu_opciones()
+def imprimir_equipos(equipos_vector):
+    if not equipos_vector:
+        print("No hay equipos para mostrar.")
     else:
-        print("[magenta]Gracias por usar el programa[/magenta]. ¡Hasta luego!")
+        imprimir_etiqueta(equipos_vector)
+    menu_opciones()
+        
+#---------------------------------------------------------------------EJECUCION---------------------------------------------------------------------#
 
 def main():
     menu_opciones()
-    
+
 if __name__ == "__main__":
     typer.run(main)
